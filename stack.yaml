@@ -1,0 +1,125 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+# aws cloudformation create-stack --stack-name test-stack --template-body file://stack.yaml
+# aws cloudformation describe-stacks --stack-name test-stack
+# aws cloudformation describe-stack-events --stack-name test-stack
+# aws cloudformation update-stack --stack-name test-stack --template-body file://stack.yaml
+
+Description: VPC, SGs, instances
+
+Parameters:
+  VPCName:
+    Description: Name of VPCName
+    Type: String
+    Default: unmaned
+
+Resources:
+  VPC:
+    Type: "AWS::EC2::VPC"
+    Properties:
+      CidrBlock: "10.100.0.0/16"
+      EnableDnsSupport: True
+      EnableDnsHostnames: True
+      Tags:
+        - Key: Name
+          Value: CFTest
+
+  Subnet:
+    Type: "AWS::EC2::Subnet"
+    Properties:
+      CidrBlock: "10.100.10.0/24"
+      MapPublicIpOnLaunch: true
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: CFTest
+
+  InternetGW:
+    Type: "AWS::EC2::InternetGateway"
+    Properties:
+      Tags:
+        - Key: Name
+          Value: CFTest
+
+  VpcGwAttachment:
+    Type: "AWS::EC2::VPCGatewayAttachment"
+    Properties:
+      InternetGatewayId: !Ref InternetGW
+      VpcId: !Ref VPC
+
+  # don't seem to be able to use the vpc default route table
+  RouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: CFTest
+
+  SubRtAss:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref Subnet
+
+  DefaultRoute:
+    Type: "AWS::EC2::Route"
+    Properties:
+      DestinationCidrBlock: "0.0.0.0/0"
+      GatewayId: !Ref InternetGW
+      RouteTableId: !Ref RouteTable
+
+  SecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: allow ssh
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: CFTest
+
+  AllowSsh:
+    Type: "AWS::EC2::SecurityGroupIngress"
+    Properties:
+      IpProtocol: tcp
+      CidrIp: "0.0.0.0/0"
+      FromPort: 22
+      ToPort: 22
+      GroupId: !Ref SecurityGroup
+      Tags:
+        - Key: Name
+          Value: CFTest
+
+  AllowUDP500:
+    Type: "AWS::EC2::SecurityGroupIngress"
+    Properties:
+      IpProtocol: udp
+      CidrIp: "0.0.0.0/0"
+      FromPort: 500
+      ToPort: 500
+      GroupId: !Ref SecurityGroup
+      Tags:
+        - Key: Name
+          Value: CFTest
+
+  Instance1:
+    Type: "AWS::EC2::Instance"
+    Properties:
+      ImageId: ami-1b791862
+      InstanceType: t2.micro
+      KeyName: z420
+      SecurityGroupIds:
+        - !Ref SecurityGroup
+      SubnetId: !Ref Subnet
+      Tags:
+        - Key: Name
+          Value: CFTest
+
+
+Outputs:
+  VPCid:
+    Description: the VPC id
+    Value: !Ref VPC
+  Subnet:
+    Description: the subnet
+    Value: !Ref Subnet

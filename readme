@@ -10,3 +10,7 @@ Here’s the link to that YAML file:
 https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2019-10-08/amazon-eks-nodegroup.yaml
 
 We will go over deploying this template as well after we’ve stood up our Control Plane stack.
+
+
+cdn:
+https://stackoverflow.com/questions/35851374/using-cloudformation-to-configure-cloudfront-with-an-s3-origin

@@ -1,0 +1,12 @@
+https://medium.com/@dhammond0083/aws-eks-managed-setup-with-cloudformation-97461300e952
+
+References:
+
+https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html
+
+The worker node template that AWS has built is pretty straight forward and I would recommend leveraging it as a separate stack. 
+Here’s the link to that YAML file:
+
+https://amazon-eks.s3-us-west-2.amazonaws.com/cloudformation/2019-10-08/amazon-eks-nodegroup.yaml
+
+We will go over deploying this template as well after we’ve stood up our Control Plane stack.

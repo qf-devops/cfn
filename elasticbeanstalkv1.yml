@@ -151,7 +151,7 @@ Resources:
       ApplicationName:
         Ref: Application
       Description: SSH access to Pathein Directory Laravel application
-      SolutionStackName: 64bit Amazon Linux 2018.03 v2.9.9 running PHP 7.2
+      SolutionStackName: PHP 8.0 running on 64bit Amazon Linux 2
       OptionSettings:
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: EC2KeyName

@@ -1,13 +1,14 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Parameters:
-  SubnetID:
-    Type: String
 Resources:
+ Application:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      Description: AWS Elastic Beanstalk Pathein Directory Laravel application
   mydemoenv:
     Type: AWS::ElasticBeanstalk::Environment
     Properties: 
       ApplicationName: 
-        Ref: sampleApplication
+        Ref: Application
         Description: "AWS Elastic Beanstalk Environment running PHP Sample Application"
       EnvironmentName: SamplePHPEnvironment
       TemplateName: DefaultConfiguration
